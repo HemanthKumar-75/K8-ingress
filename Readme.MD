@@ -1,17 +1,17 @@
 # Ingress Controller
 
-## 1. Associate IAM OIDC Provider with the EKS Cluster
+#### 1. Associate IAM OIDC Provider with the EKS Cluster
 ```
 eksctl utils associate-iam-oidc-provider \
     --region us-east-1 \
     --cluster expense-cluster \
     --approve
 ```
-## 2. Download the IAM Policy for the AWS Load Balancer Controller
+#### 2. Download the IAM Policy for the AWS Load Balancer Controller
 ```
 curl -o iam-policy.json https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.10.0/docs/install/iam_policy.json
 ```
-### 3. Create the IAM Policy in AWS
+#### 3. Create the IAM Policy in AWS
 ```
 aws iam create-policy \
     --policy-name AWSLoadBalancerControllerIAMPolicy \
