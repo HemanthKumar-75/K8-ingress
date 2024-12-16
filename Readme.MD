@@ -17,7 +17,7 @@ aws iam create-policy \
     --policy-name AWSLoadBalancerControllerIAMPolicy \
     --policy-document file://iam-policy.json
 ```
-4. Create an IAM Service Account for the Controller
+#### 4. Create an IAM Service Account for the Controller
 ```
 eksctl create iamserviceaccount \
 --cluster=expense-cluster \
@@ -28,11 +28,11 @@ eksctl create iamserviceaccount \
 --region us-east-1 \
 --approve
 ```
-5. Add Helm Chart Repository
+#### 5. Add Helm Chart Repository
 ```
 helm repo add eks https://aws.github.io/eks-charts
 ```
-6. Install AWS Load Balancer Controller Using Helm
+#### 6. Install AWS Load Balancer Controller Using Helm
 ```
 helm install aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system --set clusterName=expense-cluster --set serviceAccount.create=false --set serviceAccount.name=aws-load-balancer-controller
 ```
