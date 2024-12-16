@@ -1,0 +1,63 @@
+apiVersion: v1
+kind: Deployment
+metadata:
+  name: application-1
+  labels:
+    name: app1
+    tier: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: app1
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        name: app1
+        tier: frontend
+    spec:
+      containers:
+        - name: app1
+          image: hemanthkumar75/app1:v1
+          imagePullPolicy: Always
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name:  app1-service
+spec:
+  selector:
+    name: app1
+    tier: frontend
+  ports:
+  - name:  app1-service-port
+    protocol: TCP
+    port:  80
+    targetPort:  80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+    name: app1-ingress
+    annotations:
+      #kubernetes.io/ingress.class: alb
+      alb.ingress.kubernetes.io/scheme: internet-facing
+      alb.ingress.kubernetes.io/target-type: ip
+      alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:248189912713:certificate/eefec79d-8012-4e7e-a530-baf154b833f2
+      alb.ingress.kubernetes.io/listen-ports: '[ {"HTTPS": 443}]'
+      alb.ingress.kubernetes.io/tags: Environment=dev,Team=test
+      alb.ingress.kubernetes.io/group.name: expense-cluster
+spec:
+    ingressClassName: alb
+    rules:
+    - host: "app1.hemanthkumar.online"
+      http:
+        paths:
+        - pathType: Prefix
+          path: "/"
+          backend:
+            service:
+              name: app1-service
+              port:
+                number: 80
